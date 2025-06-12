@@ -12,4 +12,8 @@ class BotConfig(BaseConfig):
     @property
     def truncated_token(self) -> str:
         """Returns a truncated version of the bot token for logging."""
-        return self.TOKEN[:5] + "..." + self.TOKEN[-5:] if len(self.TOKEN) > 10 else self.TOKEN
+        return (
+            self.TOKEN[:5] + "..." + self.TOKEN[-5:]
+            if len(self.TOKEN) > 10
+            else self.TOKEN
+        )

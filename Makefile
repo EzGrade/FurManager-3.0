@@ -1,4 +1,4 @@
-.PHONY: lint, start
+.PHONY: lint, start, compose-up
 
 lint:
 	@echo "Running linters..."
@@ -9,3 +9,9 @@ lint:
 
 start:
 	python3 src/main.py
+
+compose-up:
+	@echo "Starting Docker containers..."
+	cd docker/local && \
+		docker compose up --build -d
+	@echo "Docker containers started."
