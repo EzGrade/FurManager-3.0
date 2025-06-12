@@ -1,6 +1,9 @@
-async def get_bot_username() -> str:
-    """Retrieve the bot's username."""
-    from aiogram import Bot
+from aiogram import Bot
 
-    bot = Bot.get_current()
-    return (await bot.get_me()).username
+from di.bot import bot_container
+
+
+async def get_bot_name(bot: Bot = bot_container.get(Bot)) -> str:
+    """Fetches the bot's name."""
+    me = await bot.get_me()
+    return me.username

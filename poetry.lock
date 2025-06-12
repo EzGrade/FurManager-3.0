@@ -231,6 +231,18 @@ files = [
 ]
 
 [[package]]
+name = "dishka"
+version = "1.6.0"
+description = "Cute DI framework with scopes and agreeable API"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "dishka-1.6.0-py3-none-any.whl", hash = "sha256:ab1aedee152ce7bb11cfd2673d7ce4001fe2b330d14e84535d7525a68430b2c2"},
+    {file = "dishka-1.6.0.tar.gz", hash = "sha256:f1fa5ec7e980d4f618d0c425d1bb81d8e9414894d8ec6553b197d2298774e12f"},
+]
+
+[[package]]
 name = "frozenlist"
 version = "1.7.0"
 description = "A list-like structure which implements collections.abc.MutableSequence"
@@ -1059,4 +1071,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14.0"
-content-hash = "becb025d9a19d9efd8b142097be4dd5351948fc5397bfc6574da2db52e86299b"
+content-hash = "3647fb3e7b0103a7d3eda99f49d53bae05697a839617bf544876441de8c630cf"

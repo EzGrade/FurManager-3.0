@@ -1,15 +1,15 @@
 from typing import Coroutine
 
-from aiogram import Bot, Dispatcher
+from aiogram import Dispatcher, Bot
 from loguru import logger
 
+from di.bot import bot_container
 from config.bot import BotConfig
+from utils.tools.bot import get_bot_name
 
 config = BotConfig()
-
 logger.info(f"Bot started with token: {config.truncated_token}")
 
-bot = Bot(token=BotConfig().TOKEN)
 dp = Dispatcher()
 
 
@@ -24,16 +24,16 @@ def register_handlers() -> None:
 
 
 def start_pooling() -> Coroutine[None, None, None]:
-    return dp.start_polling(bot)
+    return dp.start_polling(bot_container.get(Bot))
 
 
 async def main() -> None:
     register_handlers()
     if True:
-        logger.info("Starting bot polling.")
+        logger.info(f"Starting bot polling. Username: {await get_bot_name()}")
+        logger.info("Press Ctrl+C to stop.")
         await start_pooling()
     else:
-        # Code for webhook setup can be added here
         logger.info("Webhook setup is not implemented yet.")
 
 
