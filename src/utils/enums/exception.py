@@ -1,0 +1,9 @@
+from enum import StrEnum
+
+
+class ExceptionCodes(StrEnum):
+    DEFAULT_CODE = "E000001"
+    VALIDATION_ERROR = "E000002"
+    AUTHENTICATION_ERROR = "E000003"
+    DATABASE_ERROR = "E000009"
+    EXTERNAL_ERROR = "E000010"
