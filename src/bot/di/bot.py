@@ -1,7 +1,7 @@
 from dishka import make_container, Provider, Scope
 from aiogram import Bot
 
-from config.bot import BotConfig
+from src.config.bot import BotConfig
 
 bot_provider = Provider(scope=Scope.APP)
 

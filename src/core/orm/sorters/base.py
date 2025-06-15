@@ -2,7 +2,7 @@ from typing import Type
 
 from sqlalchemy import text, TextClause
 
-from src.models.base import BaseEntityModel
+from src.core.models.base import BaseEntityModel
 from src.utils.enums.sort import SortOption
 
 

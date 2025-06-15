@@ -1,5 +1,5 @@
-from .channel import ChannelModel
+from .channel import ChannelModelORM
 
 __all__ = [
-    "ChannelModel",
+    "ChannelModelORM",
 ]

@@ -8,7 +8,7 @@ lint:
 	@echo "Linters completed successfully."
 
 start:
-	python3 src/main.py
+	python3 main.py
 
 compose-up:
 	@echo "Starting Docker containers..."

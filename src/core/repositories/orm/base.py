@@ -11,8 +11,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models.base import ManyCustomResponse
-from core.orm.models.base import BaseOrmModel
+from src.core.models.base import ManyCustomResponse
+from src.core.orm.models.base import BaseOrmModel
 from src.utils.exceptions.database.orm import NoRecordsFoundException
 from src.utils.interfaces.database.repository import OrmRepositoryInterface
 from src.utils.types.type_variables import (

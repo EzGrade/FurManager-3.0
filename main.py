@@ -5,19 +5,19 @@ from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio import Redis
 from loguru import logger
 
-from bot.di.bot import bot_container
-from config.bot import BotConfig
-from config.redis import RedisConfig
-from utils.tools.bot import get_bot_name
+from src.bot.di.bot import bot_container
+from src.config.bot import BotConfig
+from src.config.redis import RedisConfig
+from src.utils.tools.bot import get_bot_name
 
 config = BotConfig()
 logger.info(f"Bot started with token: {config.truncated_token}")
 
 
 def register_handlers(dp: Dispatcher) -> None:
-    from bot.router.common.basic import basic_router
-    from bot.router.image.receive import receive_router
-    from bot.router.channel.register import register_router
+    from src.bot.router.common.basic import basic_router
+    from src.bot.router.image.receive import receive_router
+    from src.bot.router.channel.register import register_router
 
     handlers = [
         basic_router,

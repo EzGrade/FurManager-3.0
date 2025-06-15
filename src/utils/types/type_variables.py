@@ -1,9 +1,9 @@
 from typing import TypeVar
 
-from core.models.base import BaseEntityModel
-from core.orm.filters.base import BaseFilterModel
-from core.orm.models.base import BaseOrmModel
-from core.orm.sorters.base import BaseSortModel
+from src.core.models.base import BaseEntityModel
+from src.core.orm.filters.base import BaseFilterModel
+from src.core.orm.models.base import BaseOrmModel
+from src.core.orm.sorters.base import BaseSortModel
 
 BaseEntityModelT = TypeVar("BaseEntityModelT", bound=BaseEntityModel)
 

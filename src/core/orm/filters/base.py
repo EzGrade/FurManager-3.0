@@ -2,7 +2,7 @@ from typing import Callable, Any
 
 from sqlalchemy import Select
 
-from core.models.base import BaseEntityModel
+from src.core.models.base import BaseEntityModel
 
 
 class BaseFilterModel(BaseEntityModel):

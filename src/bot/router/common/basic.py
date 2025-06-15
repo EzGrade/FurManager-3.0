@@ -1,7 +1,7 @@
 from aiogram import Router, types
 from aiogram.filters import Command
 
-from utils.enums.router.commands import BasicCommands
+from src.utils.enums.router.commands import BasicCommands
 
 basic_router = Router()
 
