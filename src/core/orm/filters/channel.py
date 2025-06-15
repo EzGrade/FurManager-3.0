@@ -24,8 +24,15 @@ class ChannelFilterModel(BaseFilterModel):
     ] = None
 
     telegram_id: Annotated[
-        str | None, Query(filter_by=lambda n: ChannelModelORM.telegram_id == n)
+        int | None, Query(filter_by=lambda n: ChannelModelORM.telegram_id == n)
     ] = None
     telegram_id__in: Annotated[
-        list[str] | None, Query(filter_by=lambda n: ChannelModelORM.telegram_id.in_(n))
+        list[int] | None, Query(filter_by=lambda n: ChannelModelORM.telegram_id.in_(n))
+    ] = None
+
+    owner_id: Annotated[
+        int | None, Query(filter_by=lambda n: ChannelModelORM.owner_id == n)
+    ] = None
+    owner_id__in: Annotated[
+        list[int] | None, Query(filter_by=lambda n: ChannelModelORM.owner_id.in_(n))
     ] = None

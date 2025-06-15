@@ -2,13 +2,18 @@ from aiogram import Bot
 
 from loguru import logger
 
-from src.bot.di.bot import bot_container
 
-
-async def get_bot_name(bot: Bot = bot_container.get(Bot)) -> str:
-    """Fetches the bot's name."""
-    me = await bot.get_me()
-    if not me.username:
-        logger.error("Bot username is not set.")
-        raise
-    return me.username
+async def is_bot_admin(
+        bot: Bot, chat_id: int
+) -> bool:
+    """Checks if a user is an admin in a specific chat."""
+    try:
+        chat_member = await bot.get_chat_member(chat_id=chat_id, user_id=bot.id)
+        print(chat_member)
+        return chat_member.status in (
+            "administrator",
+            "creator",
+        )
+    except Exception as e:
+        logger.error(f"Error checking admin status: {e}")
+        return False

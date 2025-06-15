@@ -1,4 +1,4 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from pydantic import Field
 
@@ -12,7 +12,8 @@ class ChannelResponseSchema(BaseModelSchema):
 
     uuid: UUID = Field()
     name: str = Field(..., description="Name of the channel")
-    telegram_id: str = Field(..., description="Telegram ID of the channel")
+    telegram_id: int = Field(..., description="Telegram ID of the channel")
+    owner_id: int = Field(..., description="Owner ID of the channel")
 
 
 class ChannelCreateSchema(BaseModelSchema):
@@ -20,8 +21,10 @@ class ChannelCreateSchema(BaseModelSchema):
     Schema for creating a new channel.
     """
 
+    uuid: UUID | None = Field(default_factory=uuid4, description="Unique identifier for the channel")
     name: str = Field(..., description="Name of the channel")
-    telegram_id: str = Field(..., description="Telegram ID of the channel")
+    telegram_id: int = Field(..., description="Telegram ID of the channel")
+    owner_id: int = Field(..., description="Owner ID of the channel")
 
 
 class ChannelUpdateSchema(BaseModelSchema):
@@ -30,4 +33,5 @@ class ChannelUpdateSchema(BaseModelSchema):
     """
 
     name: str | None = Field(None, description="Name of the channel")
-    telegram_id: str | None = Field(None, description="Telegram ID of the channel")
+    telegram_id: int | None = Field(None, description="Telegram ID of the channel")
+    owner_id: int = Field(..., description="Owner ID of the channel")

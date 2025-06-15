@@ -67,7 +67,7 @@ class CreateChannelHandler(BaseDatabaseHandler):
             return None
 
 
-class UpdateContactHandler(BaseDatabaseHandler):
+class UpdateChannelHandler(BaseDatabaseHandler):
     def __init__(
             self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> None:
@@ -88,7 +88,7 @@ class UpdateContactHandler(BaseDatabaseHandler):
             return None
 
 
-class DeleteContactHandler(BaseDatabaseHandler):
+class DeleteChannelHandler(BaseDatabaseHandler):
     def __init__(
             self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> None:

@@ -8,7 +8,7 @@ class PostgresConfig(BaseConfig):
     PORT: int = 5432
     USER: str
     PASSWORD: str
-    DATABASE: str = "postgres"
+    DATABASE: str
 
     model_config = SettingsConfigDict(env_prefix="POSTGRES_")
 

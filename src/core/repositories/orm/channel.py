@@ -23,22 +23,22 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
     __model__ = ChannelModelORM
 
     async def retrieve_one(
-        self,
-        filters: ChannelFilterModel,
-        transform: ChannelTransformOneCallback,
-        async_session: AsyncSession,
+            self,
+            filters: ChannelFilterModel,
+            transform: ChannelTransformOneCallback,
+            async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         entity = await super().get(filters=filters, async_session=async_session)
         return transform(entity)
 
     async def retrieve_list(
-        self,
-        filters: ChannelFilterModel,
-        async_session: AsyncSession,
-        transform: ChannelListTransformCallback,
-        sorters: ChannelSortModel,
-        page: int | None = None,
-        per_page: int | None = None,
+            self,
+            filters: ChannelFilterModel,
+            async_session: AsyncSession,
+            transform: ChannelListTransformCallback,
+            sorters: ChannelSortModel,
+            page: int | None = None,
+            per_page: int | None = None,
     ) -> ManyResponseSchema[ChannelResponseSchema]:
         entities = await super().get_list(
             filters=filters,
@@ -51,11 +51,11 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
         return transform(entities)
 
     async def retrieve_all(
-        self,
-        filters: ChannelFilterModel,
-        async_session: AsyncSession,
-        transform: ChannelTransformAllCallback,
-        sorters: ChannelSortModel | None = None,
+            self,
+            filters: ChannelFilterModel,
+            async_session: AsyncSession,
+            transform: ChannelTransformAllCallback,
+            sorters: ChannelSortModel | None = None,
     ) -> list[ChannelResponseSchema]:
         entities = await super().get_all(
             filters=filters,
@@ -66,10 +66,10 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
         return transform(entities)
 
     async def create_one(
-        self,
-        model: ChannelCreateSchema,
-        transform: ChannelTransformOneCallback,
-        async_session: AsyncSession,
+            self,
+            model: ChannelCreateSchema,
+            transform: ChannelTransformOneCallback,
+            async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         created_key = await super().create(model, async_session)
 
@@ -80,10 +80,10 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
         )
 
     async def update_one(
-        self,
-        model: ChannelUpdateSchema,
-        transform: ChannelTransformOneCallback,
-        async_session: AsyncSession,
+            self,
+            model: ChannelUpdateSchema,
+            transform: ChannelTransformOneCallback,
+            async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         updated_key = await super().update(
             ChannelModelORM.uuid == model.uuid,
@@ -100,6 +100,13 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
     async def delete_by_uuid(self, uuid: UUID, async_session: AsyncSession) -> int:
         return await super().delete(
             ChannelModelORM.uuid == uuid, async_session=async_session
+        )
+
+    async def delete_by_telegram_id(
+            self, telegram_id: int, async_session: AsyncSession
+    ) -> int:
+        return await super().delete(
+            ChannelModelORM.telegram_id == telegram_id, async_session=async_session
         )
 
     async def clear(self, async_session: AsyncSession) -> int:

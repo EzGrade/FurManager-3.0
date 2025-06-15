@@ -1,20 +1,19 @@
-from typing import Coroutine
-
-from aiogram import Dispatcher, Bot
+from aiogram import Dispatcher, Bot, Router
 from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio import Redis
 from loguru import logger
+from dishka.integrations.aiogram import setup_dishka
 
-from src.bot.di.bot import bot_container
+from src.bot.di.bot import BotProvider
+from src.core.di.orm.handlers.channel import ChannelProvider
 from src.config.bot import BotConfig
 from src.config.redis import RedisConfig
-from src.utils.tools.bot import get_bot_name
 
 config = BotConfig()
 logger.info(f"Bot started with token: {config.truncated_token}")
 
 
-def register_handlers(dp: Dispatcher) -> None:
+def register_handlers(container, dp: Dispatcher) -> None:
     from src.bot.router.common.basic import basic_router
     from src.bot.router.image.receive import receive_router
     from src.bot.router.channel.register import register_router
@@ -24,15 +23,30 @@ def register_handlers(dp: Dispatcher) -> None:
         receive_router,
         register_router,
     ]
-    dp.include_routers(*handlers)
+    for handler in handlers:
+        dp.include_router(handler)
+        setup_dishka(container=container, router=handler)
+
     logger.info(f"Registered {len(handlers)} router(s).")
 
 
-def start_pooling(dp: Dispatcher) -> Coroutine[None, None, None]:
-    return dp.start_polling(bot_container.get(Bot))
+async def start_pooling(dp: Dispatcher, bot: Bot):
+    await dp.start_polling(bot)
+
+
+def get_container():
+    from dishka import make_async_container
+
+    return make_async_container(
+        BotProvider(),
+        ChannelProvider(),
+    )
 
 
 async def main() -> None:
+    container = get_container()
+    bot = await container.get(Bot)
+
     redis_config = RedisConfig()
     redis_client = Redis.from_url(
         redis_config.url,
@@ -50,13 +64,14 @@ async def main() -> None:
     storage = RedisStorage(redis=redis_client)
     dp = Dispatcher(storage=storage)
 
-    register_handlers(dp)
+    setup_dishka(container=container, router=dp)
+    register_handlers(container, dp=dp)
     if True:
         logger.opt(colors=True).info(
-            f"Starting bot polling. Username: <yellow>@{await get_bot_name()}</yellow>"
+            f"Starting bot polling. Username: <yellow>@{(await bot.get_me()).username}</yellow>"
         )
         logger.info("Press Ctrl+C to stop.")
-        await start_pooling(dp)
+        await start_pooling(dp, bot)
     else:
         logger.info("Webhook setup is not implemented yet.")
 
