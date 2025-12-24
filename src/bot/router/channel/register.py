@@ -1,21 +1,21 @@
+from aiogram.types import ChatFullInfo
 from dishka import FromDishka
 from aiogram import Router, types, Bot
-from aiogram.filters import Command, Filter, StateFilter
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from dishka.integrations.aiogram import inject
 
 from src.core.orm.handlers.channel import GetOneChannelHandler, CreateChannelHandler
-from src.core.models.channel.entity import ChannelModel
 from src.core.orm.schemas.channel import ChannelCreateSchema
-from src.utils.enums.router.commands import ChanngelCommands
+from src.utils.enums.router.commands import ChannelCommands
 from src.utils.enums.router.states import RegisterChannelStates
 from src.utils.exceptions.database.orm import NoRecordsFoundException
-from src.utils.tools.bot import is_bot_admin
+from src.utils.tools.bot import is_bot_admin, get_chat
 
 register_router = Router()
 
 
-@register_router.message(Command(ChanngelCommands.REGISTER_CHANNEL))
+@register_router.message(Command(ChannelCommands.REGISTER_CHANNEL))
 async def register_channel(message: types.Message, state: FSMContext):
     """
     Handler for the /register_channel command.
@@ -37,25 +37,30 @@ async def receive_channel_id(
     Handler for receiving the channel ID.
     This function is triggered when the user sends a channel ID.
     """
-    is_admin = await is_bot_admin(
-        bot=bot,
-        chat_id=int(message.text)
-    )
+    channel_id = message.text.strip() if message.text else ""
+    chat: ChatFullInfo = await get_chat(bot=bot, chat_id=channel_id)
+
+    is_admin = await is_bot_admin(bot=bot, chat_id=channel_id)
     if not is_admin:
         await message.answer("Bot is not an admin in this chat.")
         return
 
     try:
-        await get_one.handle(telegram_id=int(message.text))
+        await get_one.handle(telegram_id=chat.id)
         await message.answer("Channel already registered.")
         return
     except NoRecordsFoundException:
         pass
 
+    if not message.from_user:
+        await message.answer("User information is missing.")
+        return
+
     await create_one.handle(
         create_model=ChannelCreateSchema(
-            name=message.chat.username,
-            telegram_id=int(message.text),
+            name=chat.username,
+            title=chat.title,
+            telegram_id=chat.id,
             owner_id=message.from_user.id,
         )
     )

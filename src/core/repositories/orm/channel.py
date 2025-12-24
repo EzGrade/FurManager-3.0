@@ -4,18 +4,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.orm.filters.channel import ChannelFilterModel
 from src.core.orm.models import ChannelModelORM
+from src.core.orm.schemas.base import ManyResponseSchema
+from src.core.orm.schemas.channel import (
+    ChannelResponseSchema,
+    ChannelCreateSchema,
+    ChannelUpdateSchema,
+)
 from src.core.orm.sorters.channel import ChannelSortModel
 from src.core.repositories.orm.base import BaseAbstractOrmRepository
 from src.utils.types.transform_types import (
     ChannelTransformOneCallback,
     ChannelListTransformCallback,
     ChannelTransformAllCallback,
-)
-from src.core.orm.schemas.base import ManyResponseSchema
-from src.core.orm.schemas.channel import (
-    ChannelResponseSchema,
-    ChannelCreateSchema,
-    ChannelUpdateSchema,
 )
 
 
@@ -29,6 +29,7 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
             async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         entity = await super().get(filters=filters, async_session=async_session)
+        print(f"Entity: {entity}")
         return transform(entity)
 
     async def retrieve_list(
@@ -72,6 +73,8 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
             async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         created_key = await super().create(model, async_session)
+
+        print("Created channel with UUID:", created_key)
 
         return await self.retrieve_one(
             filters=ChannelFilterModel(uuid=created_key),

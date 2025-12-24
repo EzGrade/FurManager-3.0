@@ -1,3 +1,4 @@
+from datetime import datetime, UTC
 from uuid import UUID, uuid4
 
 from pydantic import Field
@@ -11,9 +12,13 @@ class ChannelResponseSchema(BaseModelSchema):
     """
 
     uuid: UUID = Field()
-    name: str = Field(..., description="Name of the channel")
+    name: str | None = Field(None, description="Name of the channel")
+    title: str | None = Field(None, description="Title of the channel")
     telegram_id: int = Field(..., description="Telegram ID of the channel")
     owner_id: int = Field(..., description="Owner ID of the channel")
+
+    created_at: datetime = Field(..., description="Creation timestamp of the channel")
+    updated_at: datetime = Field(..., description="Last update timestamp of the channel")
 
 
 class ChannelCreateSchema(BaseModelSchema):
@@ -21,10 +26,22 @@ class ChannelCreateSchema(BaseModelSchema):
     Schema for creating a new channel.
     """
 
-    uuid: UUID | None = Field(default_factory=uuid4, description="Unique identifier for the channel")
-    name: str = Field(..., description="Name of the channel")
+    uuid: UUID | None = Field(
+        default_factory=uuid4, description="Unique identifier for the channel"
+    )
+    name: str | None = Field(None, description="Name of the channel")
+    title: str | None = Field(None, description="Title of the channel")
     telegram_id: int = Field(..., description="Telegram ID of the channel")
     owner_id: int = Field(..., description="Owner ID of the channel")
+
+    created_at: datetime | None = Field(
+        description="Creation timestamp of the channel",
+        default=None
+    )
+    updated_at: datetime | None = Field(
+        description="Last update timestamp of the channel",
+        default=None
+    )
 
 
 class ChannelUpdateSchema(BaseModelSchema):
@@ -32,6 +49,13 @@ class ChannelUpdateSchema(BaseModelSchema):
     Schema for updating an existing channel.
     """
 
+    uuid: UUID | None = Field(None, description="Unique identifier for the channel")
     name: str | None = Field(None, description="Name of the channel")
+    title: str | None = Field(None, description="Title of the channel")
     telegram_id: int | None = Field(None, description="Telegram ID of the channel")
     owner_id: int = Field(..., description="Owner ID of the channel")
+
+    updated_at: datetime | None = Field(
+        description="Last update timestamp of the channel",
+        default_factory=lambda: datetime.now(UTC).replace(tzinfo=None),
+    )

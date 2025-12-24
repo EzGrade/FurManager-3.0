@@ -5,7 +5,7 @@ from src.config.base import BaseConfig
 
 class PostgresConfig(BaseConfig):
     HOST: str = "localhost"
-    PORT: int = 5432
+    PORT: int = 5433
     USER: str
     PASSWORD: str
     DATABASE: str

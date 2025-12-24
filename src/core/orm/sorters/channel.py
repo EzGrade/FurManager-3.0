@@ -14,6 +14,9 @@ class ChannelSortValues(StrEnum):
     name_asc = "name"
     name_desc = "-name"
 
+    title_asc = "title"
+    title_desc = "-title"
+
     telegram_id_asc = "telegram_id"
     telegram_id_desc = "-telegram_id"
 
@@ -21,4 +24,5 @@ class ChannelSortValues(StrEnum):
 class ChannelSortModel(BaseSortModel):
     uuid: Annotated[SortOption | None, Field(default=None)]
     name: Annotated[SortOption | None, Field(default=None)]
+    title: Annotated[SortOption | None, Field(default=None)]
     telegram_id: Annotated[SortOption | None, Field(default=None)]

@@ -92,7 +92,7 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
     async def create(self, model: CreateModelT, async_session: AsyncSession):
         stmt = (
             insert(self.__model__)
-            .values(model.model_dump(exclude_unset=True))
+            .values(model.model_dump(exclude_unset=True, exclude_none=True))
             .returning(*self.__model__.__table__.columns)
         )
         return (await async_session.execute(statement=stmt)).scalar()
@@ -101,7 +101,7 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         self, models: list[CreateModelT], async_session: AsyncSession
     ) -> int:
         stmt = insert(self.__model__).values(
-            [model.model_dump(exclude_unset=True) for model in models]
+            [model.model_dump(exclude_unset=True, exclude_none=True) for model in models]
         )
 
         return (await async_session.execute(statement=stmt)).rowcount
@@ -115,7 +115,7 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         stmt = (
             update(self.__model__)
             .where(*clauses)
-            .values(model.model_dump(exclude_unset=True))
+            .values(model.model_dump(exclude_unset=True, exclude_none=True))
             .returning(*self.__model__.__table__.columns)
         )
 
@@ -127,7 +127,7 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         """TODO Experiment with result"""
         result = await async_session.execute(
             update(self.__model__),
-            [model.model_dump(exclude_unset=True) for model in models],
+            [model.model_dump(exclude_unset=True, exclude_none=True) for model in models],
         )
         return result.scalar()
 

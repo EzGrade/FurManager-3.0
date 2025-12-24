@@ -5,7 +5,6 @@ from src.config.bot import BotConfig
 
 
 class BotProvider(Provider):
-
     @provide(scope=Scope.APP)
     def provide_bot(self) -> Bot:
         """Provides an instance of the Bot."""

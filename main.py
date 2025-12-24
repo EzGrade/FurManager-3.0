@@ -1,13 +1,13 @@
-from aiogram import Dispatcher, Bot, Router
+from aiogram import Dispatcher, Bot
 from aiogram.fsm.storage.redis import RedisStorage
-from redis.asyncio import Redis
-from loguru import logger
 from dishka.integrations.aiogram import setup_dishka
+from loguru import logger
+from redis.asyncio import Redis
 
 from src.bot.di.bot import BotProvider
-from src.core.di.orm.handlers.channel import ChannelProvider
 from src.config.bot import BotConfig
 from src.config.redis import RedisConfig
+from src.core.di.orm.handlers.channel import ChannelProvider
 
 config = BotConfig()
 logger.info(f"Bot started with token: {config.truncated_token}")
@@ -17,11 +17,13 @@ def register_handlers(container, dp: Dispatcher) -> None:
     from src.bot.router.common.basic import basic_router
     from src.bot.router.image.receive import receive_router
     from src.bot.router.channel.register import register_router
+    from src.bot.router.channel.list import list_router
 
     handlers = [
         basic_router,
         receive_router,
         register_router,
+        list_router,
     ]
     for handler in handlers:
         dp.include_router(handler)

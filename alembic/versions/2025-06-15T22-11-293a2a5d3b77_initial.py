@@ -1,8 +1,8 @@
 """Auto-generated migration
 
-Revision ID: 6c43b01601f2
+Revision ID: 293a2a5d3b77
 Revises: 
-Create Date: 2025-06-15 21:25:50.772282
+Create Date: 2025-06-15 22:11:08.223727
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '6c43b01601f2'
+revision: str = '293a2a5d3b77'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,6 +23,7 @@ def upgrade() -> None:
     op.create_table('channels',
     sa.Column('uuid', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
+    sa.Column('title', sa.String(), nullable=True),
     sa.Column('telegram_id', sa.BigInteger(), nullable=False),
     sa.Column('owner_id', sa.BigInteger(), nullable=False),
     sa.PrimaryKeyConstraint('uuid')

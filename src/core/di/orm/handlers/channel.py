@@ -15,7 +15,6 @@ from src.core.orm.core import Database
 
 
 class ChannelProvider(Provider):
-
     @provide(scope=Scope.REQUEST)
     def provide_unit_of_work(self) -> UnitOfWork:
         """Provides an instance of the UnitOfWork."""
@@ -33,42 +32,54 @@ class ChannelProvider(Provider):
         return ChannelRepository()
 
     @provide(scope=Scope.REQUEST)
-    def provide_channel_service(self, channel_repository: ChannelRepository) -> ChannelService:
+    def provide_channel_service(
+        self, channel_repository: ChannelRepository
+    ) -> ChannelService:
         """Provides an instance of the ChannelService."""
         config = ChannelServiceConfig(channel_repository=channel_repository)
         return ChannelService(config=config)
 
     @provide(scope=Scope.REQUEST)
     def provide_get_all_channels_handler(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+        self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> GetAllChannelsHandler:
         """Provides an instance of the GetAllChannelsHandler."""
-        return GetAllChannelsHandler(channel_service=channel_service, unit_of_work=unit_of_work)
+        return GetAllChannelsHandler(
+            channel_service=channel_service, unit_of_work=unit_of_work
+        )
 
     @provide(scope=Scope.REQUEST)
     def provide_get_one_channel_handler(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+        self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> GetOneChannelHandler:
         """Provides an instance of the GetOneChannelHandler."""
-        return GetOneChannelHandler(channel_service=channel_service, unit_of_work=unit_of_work)
+        return GetOneChannelHandler(
+            channel_service=channel_service, unit_of_work=unit_of_work
+        )
 
     @provide(scope=Scope.REQUEST)
     def provide_create_channel_handler(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+        self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> CreateChannelHandler:
         """Provides an instance of the CreateChannelHandler."""
-        return CreateChannelHandler(channel_service=channel_service, unit_of_work=unit_of_work)
+        return CreateChannelHandler(
+            channel_service=channel_service, unit_of_work=unit_of_work
+        )
 
     @provide(scope=Scope.REQUEST)
     def provide_update_channel_handler(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+        self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> UpdateChannelHandler:
         """Provides an instance of the UpdateChannelHandler."""
-        return UpdateChannelHandler(channel_service=channel_service, unit_of_work=unit_of_work)
+        return UpdateChannelHandler(
+            channel_service=channel_service, unit_of_work=unit_of_work
+        )
 
     @provide(scope=Scope.REQUEST)
     def provide_delete_channel_handler(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+        self, channel_service: ChannelService, unit_of_work: UnitOfWork
     ) -> DeleteChannelHandler:
         """Provides an instance of the DeleteChannelHandler."""
-        return DeleteChannelHandler(channel_service=channel_service, unit_of_work=unit_of_work)
+        return DeleteChannelHandler(
+            channel_service=channel_service, unit_of_work=unit_of_work
+        )

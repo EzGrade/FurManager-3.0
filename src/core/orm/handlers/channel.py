@@ -1,7 +1,11 @@
 from uuid import UUID
 
 from src.core.orm.filters.channel import ChannelFilterModel
-from src.core.orm.schemas.channel import ChannelResponseSchema, ChannelCreateSchema, ChannelUpdateSchema
+from src.core.orm.schemas.channel import (
+    ChannelResponseSchema,
+    ChannelCreateSchema,
+    ChannelUpdateSchema,
+)
 from src.core.orm.sorters.channel import ChannelSortValues
 from src.core.services.database.channel import ChannelService
 from src.utils.interfaces.handler import BaseDatabaseHandler
@@ -57,6 +61,7 @@ class CreateChannelHandler(BaseDatabaseHandler):
             self,
             create_model: ChannelCreateSchema,
     ) -> ChannelResponseSchema | None:
+        print("Creating channel with model:", create_model)
         async with self.unit_of_work as unit_of_work:
             uow_session = unit_of_work.session
             if uow_session is not None:

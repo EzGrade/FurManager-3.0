@@ -8,7 +8,8 @@ class BasicCommands(StrEnum):
     HELP = "/help"
 
 
-class ChanngelCommands(StrEnum):
+class ChannelCommands(StrEnum):
     """Channel commands for the bot."""
 
     REGISTER_CHANNEL = "register_channel"
+    MY_CHANNELS = "my_channels"

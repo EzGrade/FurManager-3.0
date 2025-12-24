@@ -23,6 +23,14 @@ class ChannelFilterModel(BaseFilterModel):
         list[str] | None, Query(filter_by=lambda n: ChannelModelORM.name.in_(n))
     ] = None
 
+    title: Annotated[
+        str | None,
+        Query(filter_by=lambda n: text("title ILIKE :title").params(title=f"%{n}%")),
+    ] = None
+    title__in: Annotated[
+        list[str] | None, Query(filter_by=lambda n: ChannelModelORM.title.in_(n))
+    ] = None
+
     telegram_id: Annotated[
         int | None, Query(filter_by=lambda n: ChannelModelORM.telegram_id == n)
     ] = None
