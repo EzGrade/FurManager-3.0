@@ -6,6 +6,7 @@ from dishka import FromDishka
 from dishka.integrations.aiogram import inject
 
 from src.core.orm.handlers.channel import GetOneChannelHandler, CreateChannelHandler
+from src.core.orm.handlers.user import GetOneUserHandler
 from src.core.orm.schemas.channel import ChannelCreateSchema
 from src.utils.enums.router.commands import ChannelCommands
 from src.utils.enums.router.states import RegisterChannelStates
@@ -20,7 +21,7 @@ async def register_channel(message: types.Message, state: FSMContext):
     """
     Handler for the /register_channel command.
     """
-    await message.answer("Please send me a channel ID.")
+    await message.answer("Please, forward a message from the channel you want to register")
     await state.set_state(RegisterChannelStates.WAITING_FOR_CHANNEL_ID)
 
 
@@ -30,6 +31,7 @@ async def receive_channel_id(
         message: types.Message,
         state: FSMContext,
         get_one: FromDishka[GetOneChannelHandler],
+        get_user: FromDishka[GetOneUserHandler],
         create_one: FromDishka[CreateChannelHandler],
         bot: FromDishka[Bot],
 ):
@@ -37,36 +39,43 @@ async def receive_channel_id(
     Handler for receiving the channel ID.
     This function is triggered when the user sends a channel ID.
     """
-    if message.forward_origin.type == "channel":
+    source = message.forward_origin.type
+    if source == "channel":
         channel_id = message.forward_origin.chat.id
     else:
-        channel_id = message.text.strip() if message.text else ""
+        await message.answer(
+            f"Please forward a message from the channel you want to register. "
+            f"Message source is {source}"
+        )
+        return
 
     chat: ChatFullInfo = await get_chat(bot=bot, chat_id=channel_id)
     is_admin = await is_bot_admin(bot=bot, chat_id=channel_id)
     if not is_admin:
-        await message.answer("Bot is not an admin in this chat.")
+        await message.answer("Bot is not an admin in this chat")
         return
 
     try:
         await get_one.handle(telegram_id=chat.id)
-        await message.answer("Channel already registered.")
+        await message.answer("Channel already registered")
         return
     except NoRecordsFoundException:
         pass
 
     if not message.from_user:
-        await message.answer("User information is missing.")
+        await message.answer("User information is missing")
         return
+
+    owner = await get_user.handle(telegram_id=message.from_user.id)
 
     await create_one.handle(
         create_model=ChannelCreateSchema(
             name=chat.username,
             title=chat.title,
             telegram_id=chat.id,
-            owner_id=message.from_user.id,
+            owner_id=owner.uuid,
         )
     )
 
-    await message.answer("Channel registered successfully.")
+    await message.answer("Channel registered successfully")
     await state.clear()

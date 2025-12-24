@@ -39,8 +39,8 @@ class ChannelFilterModel(BaseFilterModel):
     ] = None
 
     owner_id: Annotated[
-        int | None, Query(filter_by=lambda n: ChannelModelORM.owner_id == n)
+        UUID | None, Query(filter_by=lambda n: ChannelModelORM.owner_id == n)
     ] = None
     owner_id__in: Annotated[
-        list[int] | None, Query(filter_by=lambda n: ChannelModelORM.owner_id.in_(n))
+        list[UUID] | None, Query(filter_by=lambda n: ChannelModelORM.owner_id.in_(n))
     ] = None

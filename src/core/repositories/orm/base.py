@@ -31,9 +31,9 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
     __model__: Type[AbstractModel]
 
     async def get(
-        self,
-        filters: FilterModelT,
-        async_session: AsyncSession,
+            self,
+            filters: FilterModelT,
+            async_session: AsyncSession,
     ) -> AbstractModel:
         sql = filters.generate_filtered_query(expression=select(self.__model__))
         result = await async_session.execute(sql)
@@ -48,12 +48,12 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         return orm_model
 
     async def get_list(
-        self,
-        filters: FilterModelT,
-        sorters: SortModelT,
-        async_session: AsyncSession,
-        page: int = 1,
-        per_page: int = 5,
+            self,
+            filters: FilterModelT,
+            sorters: SortModelT,
+            async_session: AsyncSession,
+            page: int = 1,
+            per_page: int = 5,
     ) -> ManyCustomResponse:
         filtered_query = filters.generate_filtered_query(
             expression=select(self.__model__)
@@ -74,10 +74,10 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         return ManyCustomResponse[self.__model__](count=count, data=data)  # type: ignore[name-defined]
 
     async def get_all(
-        self,
-        filters: FilterModelT,
-        async_session: AsyncSession,
-        sorters: SortModelT | None = None,
+            self,
+            filters: FilterModelT,
+            async_session: AsyncSession,
+            sorters: SortModelT | None = None,
     ) -> Sequence[AbstractModel]:
         filtered_query = filters.generate_filtered_query(
             expression=select(self.__model__)
@@ -98,7 +98,7 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         return (await async_session.execute(statement=stmt)).scalar()
 
     async def create_list(
-        self, models: list[CreateModelT], async_session: AsyncSession
+            self, models: list[CreateModelT], async_session: AsyncSession
     ) -> int:
         stmt = insert(self.__model__).values(
             [model.model_dump(exclude_unset=True, exclude_none=True) for model in models]
@@ -107,10 +107,10 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         return (await async_session.execute(statement=stmt)).rowcount
 
     async def update(
-        self,
-        *clauses: ColumnExpressionArgument,
-        model: UpdateModelT,
-        async_session: AsyncSession,
+            self,
+            *clauses: ColumnExpressionArgument,
+            model: UpdateModelT,
+            async_session: AsyncSession,
     ):
         stmt = (
             update(self.__model__)
@@ -122,17 +122,16 @@ class BaseAbstractOrmRepository[AbstractModel: BaseOrmModel](OrmRepositoryInterf
         return (await async_session.execute(statement=stmt)).scalar()
 
     async def update_list(
-        self, models: list[UpdateModelT], async_session: AsyncSession
-    ):
-        """TODO Experiment with result"""
+            self, models: list[UpdateModelT], async_session: AsyncSession
+    ) -> int:
         result = await async_session.execute(
             update(self.__model__),
             [model.model_dump(exclude_unset=True, exclude_none=True) for model in models],
         )
-        return result.scalar()
+        return len(result.scalar())
 
     async def delete(
-        self, *clauses: ColumnExpressionArgument, async_session: AsyncSession
+            self, *clauses: ColumnExpressionArgument, async_session: AsyncSession
     ) -> int:
         stmt = delete(self.__model__).where(*clauses)
 

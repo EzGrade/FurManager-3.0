@@ -38,6 +38,7 @@ def transform_channel_model_into_update_request(
     model: ChannelModel,
 ) -> ChannelUpdateSchema:
     return ChannelUpdateSchema(
+        uuid=model.uuid,
         name=model.name,
         title=model.title,
         telegram_id=model.telegram_id,
@@ -49,6 +50,7 @@ def transform_channel_model_into_create_request(
     model: ChannelModel,
 ) -> ChannelCreateSchema:
     return ChannelCreateSchema(
+        uuid=model.uuid,
         name=model.name,
         title=model.title,
         telegram_id=model.telegram_id,

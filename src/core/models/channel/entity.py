@@ -22,9 +22,9 @@ class ChannelModel(BaseEntityModel):
         ...,
         description="Unique Telegram identifier for the channel",
     )
-    owner_id: int = Field(
+    owner_id: UUID = Field(
         ...,
-        description="ID of the user who owns the channel",
+        description="UUID of the user who owns the channel",
     )
     created_at: str | None = Field(
         default=None,

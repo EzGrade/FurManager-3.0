@@ -8,6 +8,7 @@ from src.bot.di.bot import BotProvider
 from src.config.bot import BotConfig
 from src.config.redis import RedisConfig
 from src.core.di.orm.handlers.channel import ChannelProvider
+from src.core.di.orm.handlers.user import UserProvider
 
 config = BotConfig()
 logger.info(f"Bot started with token: {config.truncated_token}")
@@ -42,6 +43,7 @@ def get_container():
     return make_async_container(
         BotProvider(),
         ChannelProvider(),
+        UserProvider(),
     )
 
 
