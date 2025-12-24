@@ -1,8 +1,8 @@
-from aiogram.types import ChatFullInfo
-from dishka import FromDishka
 from aiogram import Router, types, Bot
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
+from aiogram.types import ChatFullInfo
+from dishka import FromDishka
 from dishka.integrations.aiogram import inject
 
 from src.core.orm.handlers.channel import GetOneChannelHandler, CreateChannelHandler
@@ -37,9 +37,12 @@ async def receive_channel_id(
     Handler for receiving the channel ID.
     This function is triggered when the user sends a channel ID.
     """
-    channel_id = message.text.strip() if message.text else ""
-    chat: ChatFullInfo = await get_chat(bot=bot, chat_id=channel_id)
+    if message.forward_origin.type == "channel":
+        channel_id = message.forward_origin.chat.id
+    else:
+        channel_id = message.text.strip() if message.text else ""
 
+    chat: ChatFullInfo = await get_chat(bot=bot, chat_id=channel_id)
     is_admin = await is_bot_admin(bot=bot, chat_id=channel_id)
     if not is_admin:
         await message.answer("Bot is not an admin in this chat.")

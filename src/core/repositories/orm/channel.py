@@ -29,7 +29,6 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
             async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         entity = await super().get(filters=filters, async_session=async_session)
-        print(f"Entity: {entity}")
         return transform(entity)
 
     async def retrieve_list(
@@ -73,8 +72,6 @@ class ChannelRepository(BaseAbstractOrmRepository[ChannelModelORM]):
             async_session: AsyncSession,
     ) -> ChannelResponseSchema:
         created_key = await super().create(model, async_session)
-
-        print("Created channel with UUID:", created_key)
 
         return await self.retrieve_one(
             filters=ChannelFilterModel(uuid=created_key),

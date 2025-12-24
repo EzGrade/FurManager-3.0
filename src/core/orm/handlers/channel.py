@@ -61,7 +61,6 @@ class CreateChannelHandler(BaseDatabaseHandler):
             self,
             create_model: ChannelCreateSchema,
     ) -> ChannelResponseSchema | None:
-        print("Creating channel with model:", create_model)
         async with self.unit_of_work as unit_of_work:
             uow_session = unit_of_work.session
             if uow_session is not None:
