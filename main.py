@@ -10,6 +10,8 @@ from src.config.redis import RedisConfig
 from src.core.di.orm.handlers.channel import ChannelProvider
 from src.core.di.orm.handlers.channel_config import ChannelConfigProvider
 from src.core.di.orm.handlers.user import UserProvider
+from src.core.di.repositories.base import RedisProvider
+from src.core.di.repositories.redis.bot import ChannelsRedisRepositoryProvider
 
 config = BotConfig()
 logger.info(f"Bot started with token: {config.truncated_token}")
@@ -46,6 +48,8 @@ def get_container():
         ChannelProvider(),
         ChannelConfigProvider(),
         UserProvider(),
+        RedisProvider(),
+        ChannelsRedisRepositoryProvider()
     )
 
 

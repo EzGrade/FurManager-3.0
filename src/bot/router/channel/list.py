@@ -3,13 +3,13 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from dishka import FromDishka
 from dishka.integrations.aiogram import inject
-from orjson import dumps, loads, OPT_SERIALIZE_UUID
 
 from src.bot.callbacks.channel import ChannelListCallbacks
 from src.bot.markup.channel.paginator import paginator_channel_kb
 from src.core.orm.handlers.channel import GetAllChannelsHandler
 from src.core.orm.handlers.user import GetOneUserHandler
 from src.core.orm.schemas.channel import ChannelResponseSchema
+from src.core.repositories.redis.bot.channels import ChannelsRedisRepository
 from src.utils.enums.router.commands import ChannelCommands
 
 list_router = Router()
@@ -19,6 +19,7 @@ async def list_channels_handler(
         message: types.Message | types.CallbackQuery,
         get_user: GetOneUserHandler,
         get_all: GetAllChannelsHandler,
+        channels_redis: ChannelsRedisRepository,
         state: FSMContext,
         page: int = 0,
 ) -> tuple[str, types.InlineKeyboardMarkup | None] | None:
@@ -31,27 +32,14 @@ async def list_channels_handler(
     if not user:
         return "Something went wrong\\.\\.\\.", None
 
-    data = await state.get_data()
+    channels: list[ChannelResponseSchema] = await channels_redis.retrieve_list(key=str(user.uuid))
 
-    if not data.get("channels"):
+    if not channels:
         channels = await get_all.handle(owner_id=user.uuid)
-        channels_json = dumps(
-            [channel.model_dump(mode="json") for channel in channels],
-            option=OPT_SERIALIZE_UUID,
-        ).decode("utf-8")
-        await state.update_data(channels=channels_json)
-        data = await state.get_data()
-
-    channels_raw = data.get("channels", "[]")
-    if isinstance(channels_raw, str):
-        channels_payload = loads(channels_raw)
-    else:
-        channels_payload = channels_raw
-
-    channels = [
-        ChannelResponseSchema.model_validate(channel)
-        for channel in channels_payload
-    ]
+        await channels_redis.append_values(
+            key=str(user.uuid),
+            values=channels
+        )
 
     channel_text = channels[page].format()
     keyboard = paginator_channel_kb(page, len(channels))
@@ -68,6 +56,7 @@ async def list_channels(
         message: types.Message,
         get_user: FromDishka[GetOneUserHandler],
         get_all: FromDishka[GetAllChannelsHandler],
+        channels_redis: FromDishka[ChannelsRedisRepository],
         state: FSMContext,
 ):
     """
@@ -79,6 +68,7 @@ async def list_channels(
         message=message,
         get_user=get_user,
         get_all=get_all,
+        channels_redis=channels_redis,
         state=state
     )
     await message.answer(message_text, reply_markup=kb)
@@ -91,6 +81,7 @@ async def configure_channel(
         callback_data: ChannelListCallbacks.ChannelPage,
         get_user: FromDishka[GetOneUserHandler],
         get_all: FromDishka[GetAllChannelsHandler],
+        channels_redis: FromDishka[ChannelsRedisRepository],
         state: FSMContext,
 ):
     await callback_query.answer()
@@ -103,6 +94,7 @@ async def configure_channel(
         message=callback_query,
         get_user=get_user,
         get_all=get_all,
+        channels_redis=channels_redis,
         state=state,
         page=callback_data.page
     )

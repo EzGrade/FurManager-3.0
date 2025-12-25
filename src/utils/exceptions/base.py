@@ -9,3 +9,7 @@ class BaseApplicationException(Exception):
     def __init__(self, message: str, details: dict | None = None):
         self.message: str = message
         self.details = details
+
+
+class BaseRepositoryException(Exception):
+    pass
