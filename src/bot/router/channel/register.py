@@ -8,9 +8,9 @@ from dishka.integrations.aiogram import inject
 from src.core.orm.handlers.channel import GetOneChannelHandler, CreateChannelHandler
 from src.core.orm.handlers.user import GetOneUserHandler
 from src.core.orm.schemas.channel import ChannelCreateSchema
+from src.core.repositories.redis.bot.channels import ChannelsRedisRepository
 from src.utils.enums.router.commands import ChannelCommands
 from src.utils.enums.router.states import RegisterChannelStates
-from src.utils.exceptions.database.orm import NoRecordsFoundException
 from src.utils.tools.bot import is_bot_admin, get_chat
 
 register_router = Router()
@@ -33,6 +33,7 @@ async def receive_channel_id(
         get_one: FromDishka[GetOneChannelHandler],
         get_user: FromDishka[GetOneUserHandler],
         create_one: FromDishka[CreateChannelHandler],
+        channels_redis: FromDishka[ChannelsRedisRepository],
         bot: FromDishka[Bot],
 ):
     """
@@ -55,12 +56,10 @@ async def receive_channel_id(
         await message.answer("Bot is not an admin in this chat")
         return
 
-    try:
-        await get_one.handle(telegram_id=chat.id)
+    channel = await get_one.handle(telegram_id=chat.id)
+
+    if channel:
         await message.answer("Channel already registered")
-        return
-    except NoRecordsFoundException:
-        pass
 
     if not message.from_user:
         await message.answer("User information is missing")
@@ -75,6 +74,10 @@ async def receive_channel_id(
             telegram_id=chat.id,
             owner_id=owner.uuid,
         )
+    )
+
+    await channels_redis.delete_list(
+        key=str(owner.uuid)
     )
 
     await message.answer("Channel registered successfully")

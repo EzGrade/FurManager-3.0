@@ -19,7 +19,9 @@ class ChannelConfigModelORM(BaseOrmModel):
     uuid: Mapped[PYUUID] = mapped_column(PGUUID, primary_key=True, default=uuid4)
     is_post_owner_report_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    channel_id: Mapped[PYUUID] = mapped_column(ForeignKey("channels.uuid"), nullable=True, unique=True)
+    channel_id: Mapped[PYUUID] = mapped_column(
+        ForeignKey("channels.uuid", ondelete="CASCADE"), nullable=True, unique=True
+    )
     updated_by_id: Mapped[PYUUID | None] = mapped_column(ForeignKey("users.uuid"), nullable=True)
 
     updated_at: Mapped[DateTime] = mapped_column(
@@ -28,5 +30,7 @@ class ChannelConfigModelORM(BaseOrmModel):
         nullable=False
     )
 
-    channel: Mapped["ChannelModelORM"] = relationship(back_populates="config", uselist=False)
+    channel: Mapped["ChannelModelORM"] = relationship(
+        back_populates="config", uselist=False, passive_deletes=True
+    )
     updated_by: Mapped["UserModelORM"] = relationship(back_populates="channels_configs")

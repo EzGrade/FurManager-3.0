@@ -6,4 +6,9 @@ class ChannelListCallbacks:
         page: int
 
     class ConfigureChannel(CallbackData, prefix="configure_channel"):
-        page: int
+        channel_id: str
+
+
+class ChannelDeleteCallbacks:
+    class DeleteChannel(CallbackData, prefix="delete_channel"):
+        channel_id: str

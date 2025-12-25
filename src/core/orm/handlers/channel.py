@@ -10,6 +10,7 @@ from src.core.orm.schemas.channel_config import ChannelConfigCreateSchema
 from src.core.orm.sorters.channel import ChannelSortValues
 from src.core.services.database.channel import ChannelService
 from src.core.services.database.channel_config import ChannelConfigService
+from src.utils.exceptions.database.orm import NoRecordsFoundException
 from src.utils.interfaces.database.unit_of_work import UnitOfWork
 from src.utils.interfaces.handler import BaseDatabaseHandler
 
@@ -45,9 +46,12 @@ class GetOneChannelHandler(BaseDatabaseHandler):
         async with self.unit_of_work as unit_of_work:
             uow_session = unit_of_work.session
             if uow_session is not None:
-                return await self.channel_service.get_one_by_filters(
-                    async_session=uow_session, filters=ChannelFilterModel(**kwargs)
-                )
+                try:
+                    return await self.channel_service.get_one_by_filters(
+                        async_session=uow_session, filters=ChannelFilterModel(**kwargs)
+                    )
+                except NoRecordsFoundException:
+                    return None
 
             return None
 

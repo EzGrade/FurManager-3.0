@@ -30,22 +30,26 @@ async def list_channels_handler(
 
     user = await get_user.handle(telegram_id=message.from_user.id)
     if not user:
-        return "Something went wrong\\.\\.\\.", None
+        return r"Something went wrong\.\.\.", None
 
     channels: list[ChannelResponseSchema] = await channels_redis.retrieve_list(key=str(user.uuid))
 
     if not channels:
         channels = await get_all.handle(owner_id=user.uuid)
+        if not channels:
+            return "You have no registered channels", None
+
         await channels_redis.append_values(
             key=str(user.uuid),
             values=channels
         )
 
     channel_text = channels[page].format()
-    keyboard = paginator_channel_kb(page, len(channels))
-
-    if not channels:
-        return "You have no registered channels", None
+    keyboard = paginator_channel_kb(
+        page=page,
+        total_pages=len(channels),
+        channel_id=str(channels[page].uuid)
+    )
 
     return channel_text, keyboard
 
@@ -76,7 +80,7 @@ async def list_channels(
 
 @list_router.callback_query(ChannelListCallbacks.ChannelPage.filter())
 @inject
-async def configure_channel(
+async def list_channels(
         callback_query: types.CallbackQuery,
         callback_data: ChannelListCallbacks.ChannelPage,
         get_user: FromDishka[GetOneUserHandler],
