@@ -4,7 +4,11 @@ from aiogram.utils.keyboard import (
     InlineKeyboardButton
 )
 
-from src.bot.callbacks.channel import ChannelListCallbacks, ChannelDeleteCallbacks
+from src.bot.callbacks.channel import (
+    ChannelListCallbacks,
+    ChannelDeleteCallbacks,
+    ChannelConfigCallbacks
+)
 from src.bot.markup.common.paginator import paginator_inline_kb
 
 
@@ -16,7 +20,7 @@ def paginator_channel_kb(
     paginator = paginator_inline_kb(page, total_pages, ChannelListCallbacks.ChannelPage)
     configure_button = InlineKeyboardButton(
         text="Configure",
-        callback_data=ChannelListCallbacks.ConfigureChannel(channel_id=channel_id).pack()
+        callback_data=ChannelConfigCallbacks.ConfigureChannel(channel_id=channel_id).pack()
     )
     delete_button = InlineKeyboardButton(
         text="Delete",

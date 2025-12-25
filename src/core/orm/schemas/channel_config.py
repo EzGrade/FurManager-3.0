@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 from pydantic import Field
 
 from src.core.orm.schemas.base import BaseModelSchema
+from src.core.orm.schemas.user import UserResponseSchema
 
 
 class ChannelConfigResponseSchema(BaseModelSchema):
@@ -17,6 +18,15 @@ class ChannelConfigResponseSchema(BaseModelSchema):
     updated_at: datetime = Field(..., description="Last update timestamp of the channel")
     updated_by_id: UUID | None = Field(None, description="UUID of the user who last updated the channel")
     channel_id: UUID | None = Field(None, description="UUID of the channel")
+
+    def format(self, user: UserResponseSchema) -> str:
+        post_owner_report_enabled = "Enabled" if self.is_post_owner_report_enabled else "Disabled"
+        date = self.updated_at.strftime("%d %b %Y %H:%M:%S").replace("-", r"\-")
+        return (
+            f"Report post creator: {post_owner_report_enabled}\n"
+            f"Last updated: {date}\\(UTC\\)\n"
+            f"Updated by: @{user.username}\\({user.telegram_id}\\)"
+        )
 
 
 class ChannelConfigCreateSchema(BaseModelSchema):

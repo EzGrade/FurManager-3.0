@@ -23,13 +23,15 @@ def register_handlers(container, dp: Dispatcher) -> None:
     from src.bot.router.channel.register import register_router
     from src.bot.router.channel.list import list_router
     from src.bot.router.channel.delete import delete_router
+    from src.bot.router.channel.configure import config_router
 
     handlers = [
         basic_router,
         receive_router,
         register_router,
         list_router,
-        delete_router
+        delete_router,
+        config_router
     ]
     for handler in handlers:
         dp.include_router(handler)
