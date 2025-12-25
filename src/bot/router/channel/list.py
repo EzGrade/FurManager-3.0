@@ -89,10 +89,6 @@ async def list_channels(
         state: FSMContext,
 ):
     await callback_query.answer()
-    data = await state.get_data()
-
-    if callback_data.page == data.get("page"):
-        return
 
     message_text, kb = await list_channels_handler(
         message=callback_query,
