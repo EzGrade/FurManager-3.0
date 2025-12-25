@@ -46,6 +46,7 @@ async def configure_channel(
             page=data.get("page", 0)
         )
     )
+    await callback_query.answer()
 
 
 @config_router.callback_query(ChannelConfigCallbacks.ToggleReportPostOwner.filter())
@@ -87,3 +88,4 @@ async def toggle_report_post_owner(
             page=data.get("page", 0)
         )
     )
+    await callback_query.answer()
