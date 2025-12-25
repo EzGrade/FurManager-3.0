@@ -14,3 +14,6 @@ class ChannelDeleteCallbacks:
 class ChannelConfigCallbacks:
     class ConfigureChannel(CallbackData, prefix="configure_channel"):
         channel_id: str
+
+    class ToggleReportPostOwner(CallbackData, prefix="toggle_report_post_owner"):
+        channel_id: str

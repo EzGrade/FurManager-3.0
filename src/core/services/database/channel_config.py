@@ -90,6 +90,11 @@ class ChannelConfigService(BaseService):
     async def update(
             self, update_model: ChannelConfigUpdateSchema, async_session: AsyncSession
     ) -> ChannelConfigResponseSchema:
+        # ensure updated_at is refreshed on each update
+        if update_model.updated_at is None:
+            from datetime import datetime, UTC
+
+            update_model.updated_at = datetime.now(UTC).replace(tzinfo=None)
         return await self._repository.update_one(
             model=update_model,
             transform=transform_orm_channel_config_model_into_response,

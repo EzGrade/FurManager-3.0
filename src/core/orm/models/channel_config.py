@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 from uuid import UUID as PYUUID, uuid4
 
-from sqlalchemy import DateTime, Boolean, ForeignKey
+from sqlalchemy import DateTime, Boolean, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -26,8 +26,9 @@ class ChannelConfigModelORM(BaseOrmModel):
 
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime,
-        insert_default=lambda: datetime.now(UTC).replace(tzinfo=None),
-        nullable=False
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
     )
 
     channel: Mapped["ChannelModelORM"] = relationship(

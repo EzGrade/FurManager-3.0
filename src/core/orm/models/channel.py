@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 from uuid import UUID as PYUUID, uuid4
 
-from sqlalchemy import String, BigInteger, DateTime, ForeignKey
+from sqlalchemy import String, BigInteger, DateTime, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -10,7 +10,6 @@ from src.core.orm.models.base import BaseOrmModel
 
 if TYPE_CHECKING:
     from src.core.orm.models.user import UserModelORM
-    from src.core.orm.models.channel_config import ChannelConfigModelORM
     from src.core.orm.models.channel_config import ChannelConfigModelORM
 
 
@@ -29,7 +28,8 @@ class ChannelModelORM(BaseOrmModel):
     )
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime,
-        insert_default=lambda: datetime.now(UTC).replace(tzinfo=None),
+        server_default=func.now(),
+        onupdate=func.now(),
         nullable=False
     )
     owner: Mapped["UserModelORM"] = relationship(back_populates="channels")

@@ -20,7 +20,7 @@ class ChannelConfigResponseSchema(BaseModelSchema):
     channel_id: UUID | None = Field(None, description="UUID of the channel")
 
     def format(self, user: UserResponseSchema) -> str:
-        post_owner_report_enabled = "Enabled" if self.is_post_owner_report_enabled else "Disabled"
+        post_owner_report_enabled = "✅ Enabled" if self.is_post_owner_report_enabled else "❌ Disabled"
         date = self.updated_at.strftime("%d %b %Y %H:%M:%S").replace("-", r"\-")
         return (
             f"Report post creator: {post_owner_report_enabled}\n"
