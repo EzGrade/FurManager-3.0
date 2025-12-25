@@ -10,6 +10,8 @@ from src.core.orm.models.base import BaseOrmModel
 
 if TYPE_CHECKING:
     from src.core.orm.models.user import UserModelORM
+    from src.core.orm.models.channel_config import ChannelConfigModelORM
+    from src.core.orm.models.channel_config import ChannelConfigModelORM
 
 
 class ChannelModelORM(BaseOrmModel):
@@ -31,3 +33,6 @@ class ChannelModelORM(BaseOrmModel):
         nullable=False
     )
     owner: Mapped["UserModelORM"] = relationship(back_populates="channels")
+    config: Mapped["ChannelConfigModelORM"] = relationship(
+        back_populates="channel", uselist=False, cascade="all, delete-orphan"
+    )

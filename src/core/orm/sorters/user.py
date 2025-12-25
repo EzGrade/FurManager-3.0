@@ -13,7 +13,7 @@ class UserSortValues(StrEnum):
 
     first_name_asc = "first_name"
     first_name_desc = "-first_name"
-    
+
     last_name_asc = "last_name"
     last_name_desc = "-last_name"
 
@@ -25,6 +25,7 @@ class UserSortValues(StrEnum):
 
     joined_at_asc = "joined_at"
     joined_at_desc = "-joined_at"
+
 
 class UserSortModel(BaseSortModel):
     uuid: Annotated[SortOption | None, Field(default=None)]

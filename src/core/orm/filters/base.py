@@ -29,9 +29,9 @@ class Query:
     filter_by: Callable[[Any], Select] | None = None
 
     def __init__(
-        self,
-        modify_by: Callable[[Select, Any], Select] | None = None,
-        filter_by: Callable[[Any], Select] | None = None,
+            self,
+            modify_by: Callable[[Select, Any], Select] | None = None,
+            filter_by: Callable[[Any], Select] | None = None,
     ):
         self.modify_by = modify_by
         self.filter_by = filter_by

@@ -6,10 +6,12 @@ from src.core.orm.schemas.channel import (
     ChannelCreateSchema,
     ChannelUpdateSchema,
 )
+from src.core.orm.schemas.channel_config import ChannelConfigCreateSchema
 from src.core.orm.sorters.channel import ChannelSortValues
 from src.core.services.database.channel import ChannelService
-from src.utils.interfaces.handler import BaseDatabaseHandler
+from src.core.services.database.channel_config import ChannelConfigService
 from src.utils.interfaces.database.unit_of_work import UnitOfWork
+from src.utils.interfaces.handler import BaseDatabaseHandler
 
 
 class GetAllChannelsHandler(BaseDatabaseHandler):
@@ -52,10 +54,14 @@ class GetOneChannelHandler(BaseDatabaseHandler):
 
 class CreateChannelHandler(BaseDatabaseHandler):
     def __init__(
-            self, channel_service: ChannelService, unit_of_work: UnitOfWork
+            self,
+            channel_service: ChannelService,
+            channel_config_service: ChannelConfigService,
+            unit_of_work: UnitOfWork
     ) -> None:
         super().__init__(unit_of_work)
         self.channel_service = channel_service
+        self.channel_config_service = channel_config_service
 
     async def handle(
             self,
@@ -64,9 +70,17 @@ class CreateChannelHandler(BaseDatabaseHandler):
         async with self.unit_of_work as unit_of_work:
             uow_session = unit_of_work.session
             if uow_session is not None:
-                return await self.channel_service.create(
+                channel = await self.channel_service.create(
                     async_session=uow_session, create_model=create_model
                 )
+
+                channel_config_obj = ChannelConfigCreateSchema(
+                    updated_by_id=create_model.owner_id, channel_id=channel.uuid
+                )
+                await self.channel_config_service.create(
+                    async_session=uow_session, create_model=channel_config_obj
+                )
+                return channel
 
             return None
 

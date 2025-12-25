@@ -1,9 +1,7 @@
 from dishka import Provider, Scope, provide
 
 from src.config.database import PostgresConfig
-from src.utils.interfaces.database.unit_of_work import UnitOfWork
-from src.core.services.database.user import UserServiceConfig, UserService
-from src.core.repositories.orm.user import UserRepository
+from src.core.orm.core import Database
 from src.core.orm.handlers.user import (
     GetAllUsersHandler,
     GetOneUserHandler,
@@ -11,7 +9,9 @@ from src.core.orm.handlers.user import (
     UpdateUserHandler,
     DeleteUserHandler,
 )
-from src.core.orm.core import Database
+from src.core.repositories.orm.user import UserRepository
+from src.core.services.database.user import UserServiceConfig, UserService
+from src.utils.interfaces.database.unit_of_work import UnitOfWork
 
 
 class UserProvider(Provider):
@@ -33,7 +33,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_user_service(
-        self, user_repository: UserRepository
+            self, user_repository: UserRepository
     ) -> UserService:
         """Provides an instance of the UserService."""
         config = UserServiceConfig(user_repository=user_repository)
@@ -41,7 +41,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_get_all_users_handler(
-        self, user_service: UserService, unit_of_work: UnitOfWork
+            self, user_service: UserService, unit_of_work: UnitOfWork
     ) -> GetAllUsersHandler:
         """Provides an instance of the GetAllUsersHandler."""
         return GetAllUsersHandler(
@@ -50,7 +50,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_get_one_user_handler(
-        self, user_service: UserService, unit_of_work: UnitOfWork
+            self, user_service: UserService, unit_of_work: UnitOfWork
     ) -> GetOneUserHandler:
         """Provides an instance of the GetOneUserHandler."""
         return GetOneUserHandler(
@@ -59,7 +59,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_create_user_handler(
-        self, user_service: UserService, unit_of_work: UnitOfWork
+            self, user_service: UserService, unit_of_work: UnitOfWork
     ) -> CreateUserHandler:
         """Provides an instance of the CreateUserHandler."""
         return CreateUserHandler(
@@ -68,7 +68,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_update_user_handler(
-        self, user_service: UserService, unit_of_work: UnitOfWork
+            self, user_service: UserService, unit_of_work: UnitOfWork
     ) -> UpdateUserHandler:
         """Provides an instance of the UpdateUserHandler."""
         return UpdateUserHandler(
@@ -77,7 +77,7 @@ class UserProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     def provide_delete_user_handler(
-        self, user_service: UserService, unit_of_work: UnitOfWork
+            self, user_service: UserService, unit_of_work: UnitOfWork
     ) -> DeleteUserHandler:
         """Provides an instance of the DeleteUserHandler."""
         return DeleteUserHandler(

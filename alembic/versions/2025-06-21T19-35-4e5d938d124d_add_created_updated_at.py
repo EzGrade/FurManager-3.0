@@ -1,4 +1,4 @@
-"""Auto-generated migration
+"""Added created_at and updated_at
 
 Revision ID: 4e5d938d124d
 Revises: 293a2a5d3b77

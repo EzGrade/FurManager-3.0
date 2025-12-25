@@ -44,7 +44,7 @@ async def receive_channel_id(
         channel_id = message.forward_origin.chat.id
     else:
         await message.answer(
-            f"Please forward a message from the channel you want to register. "
+            f"Please forward a message from the channel you want to register\\. "
             f"Message source is {source}"
         )
         return

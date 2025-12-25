@@ -1,4 +1,4 @@
-"""Auto-generated migration
+"""Initial
 
 Revision ID: 293a2a5d3b77
 Revises: 

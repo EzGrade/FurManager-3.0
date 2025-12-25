@@ -10,6 +10,7 @@ from src.core.orm.models.base import BaseOrmModel
 
 if TYPE_CHECKING:
     from src.core.orm.models.channel import ChannelModelORM
+    from src.core.orm.models.channel_config import ChannelConfigModelORM
 
 
 class UserModelORM(BaseOrmModel):
@@ -27,3 +28,4 @@ class UserModelORM(BaseOrmModel):
     )
 
     channels: Mapped[list["ChannelModelORM"]] = relationship(back_populates="owner")
+    channels_configs: Mapped[list["ChannelConfigModelORM"]] = relationship(back_populates="updated_by")

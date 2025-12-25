@@ -37,5 +37,5 @@ async def start_command(
         logger.info(f"User {user_obj.telegram_id} created")
 
     await message.answer(
-        "Hello! Welcome to channel management bot"
+        "Hello\\! Welcome to channel management bot"
     )

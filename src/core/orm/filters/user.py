@@ -1,6 +1,6 @@
+from datetime import datetime
 from typing import Annotated
 from uuid import UUID
-from datetime import datetime
 
 from sqlalchemy import text
 
