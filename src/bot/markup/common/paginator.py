@@ -4,6 +4,8 @@ from aiogram.utils.keyboard import (
     InlineKeyboardButton
 )
 
+from src.bot.callbacks.common import BasicCallbacks
+
 
 def paginator_inline_kb(
         page: int,
@@ -24,13 +26,13 @@ def paginator_inline_kb(
             )
         else:
             left_button = InlineKeyboardButton(
-                text="To End",
+                text=f"to last",
                 callback_data=page_callback(page=total_pages - 1).pack()
             )
 
         if page == total_pages - 1 and total_pages > 1:
             right_button = InlineKeyboardButton(
-                text="To Start",
+                text="to first",
                 callback_data=page_callback(page=0).pack()
             )
         else:
@@ -44,7 +46,7 @@ def paginator_inline_kb(
         1,
         InlineKeyboardButton(
             text=f"Page {page + 1}/{total_pages}",
-            callback_data=page_callback(page=page).pack()
+            callback_data=BasicCallbacks.DummyCallback().pack()
         )
     )
 

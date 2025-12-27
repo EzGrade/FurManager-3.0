@@ -4,6 +4,7 @@ from dishka import FromDishka
 from dishka.integrations.aiogram import inject
 from loguru import logger
 
+from src.bot.callbacks.common import BasicCallbacks
 from src.core.orm.handlers.user import (
     GetOneUserHandler,
     CreateUserHandler
@@ -39,3 +40,8 @@ async def start_command(
     await message.answer(
         "Hello\\! Welcome to channel management bot"
     )
+
+
+@basic_router.callback_query(BasicCallbacks.DummyCallback.filter())
+async def dummy_callback(callback_query: types.CallbackQuery) -> None:
+    await callback_query.answer()
