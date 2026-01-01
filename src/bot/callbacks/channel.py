@@ -9,6 +9,10 @@ class ChannelListCallbacks:
 class ChannelDeleteCallbacks:
     class DeleteChannel(CallbackData, prefix="delete_channel"):
         channel_id: str
+        page: int
+
+    class ConfirmDeleteChannel(CallbackData, prefix="confirm_delete_channel"):
+        channel_id: str
 
 
 class ChannelConfigCallbacks:

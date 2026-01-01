@@ -3,6 +3,8 @@ from dishka import FromDishka
 from dishka.integrations.aiogram import inject
 
 from src.bot.callbacks.channel import ChannelDeleteCallbacks
+from src.bot.markup.channel.delete import confirm_deletion_kb
+from src.bot.markup.channel.paginator import back_to_paginator
 from src.core.orm.handlers.channel import DeleteChannelHandler, GetOneChannelHandler
 from src.core.orm.handlers.user import GetOneUserHandler
 from src.core.repositories.redis.bot.channels import ChannelsRedisRepository
@@ -13,6 +15,22 @@ delete_router = Router()
 @delete_router.callback_query(ChannelDeleteCallbacks.DeleteChannel.filter())
 @inject
 async def delete_channel(
+        callback_query: types.CallbackQuery,
+        callback_data: ChannelDeleteCallbacks.DeleteChannel,
+):
+    kb = confirm_deletion_kb(
+        channel_id=callback_data.channel_id,
+        page=callback_data.page
+    )
+    await callback_query.message.edit_text(
+        text="Are you sure you want to delete this channel?",
+        reply_markup=kb
+    )
+
+
+@delete_router.callback_query(ChannelDeleteCallbacks.ConfirmDeleteChannel.filter())
+@inject
+async def confirm_delete_channel(
         callback_query: types.CallbackQuery,
         get_user: FromDishka[GetOneUserHandler],
         get_channel: FromDishka[GetOneChannelHandler],
@@ -38,5 +56,6 @@ async def delete_channel(
     await channels_redis.delete_list(key=str(user.uuid))
 
     await callback_query.message.edit_text(
-        f"Channel deleted successfully"
+        f"Channel deleted successfully",
+        reply_markup=back_to_paginator()
     )

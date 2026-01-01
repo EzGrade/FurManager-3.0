@@ -24,7 +24,10 @@ def paginator_channel_kb(
     )
     delete_button = InlineKeyboardButton(
         text="Delete",
-        callback_data=ChannelDeleteCallbacks.DeleteChannel(channel_id=channel_id).pack()
+        callback_data=ChannelDeleteCallbacks.DeleteChannel(
+            channel_id=channel_id,
+            page=page
+        ).pack()
     )
 
     builder = InlineKeyboardBuilder()
@@ -32,4 +35,16 @@ def paginator_channel_kb(
     buttons.extend([button for button in paginator.buttons])
     builder.row(*buttons)
     builder.adjust(2, 3)
+    return builder.as_markup()
+
+
+def back_to_paginator() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(
+            text="Back",
+            callback_data=ChannelListCallbacks.ChannelPage(page=0).pack()
+        )
+    )
+
     return builder.as_markup()

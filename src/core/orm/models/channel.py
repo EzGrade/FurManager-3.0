@@ -28,6 +28,7 @@ class ChannelModelORM(BaseOrmModel):
     )
     updated_at: Mapped[DateTime] = mapped_column(
         DateTime,
+        insert_default=lambda: datetime.now(UTC).replace(tzinfo=None),
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False
